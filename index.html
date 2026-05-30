@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NarrativeX - AI-powered comic and story creator PWA">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="NarrativeX">
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%231a1a2e' width='192' height='192'/><text x='50%' y='50%' font-size='120' fill='%2300d4ff' text-anchor='middle' dominant-baseline='middle' font-family='Arial' font-weight='bold'>X</text></svg>">
+    <link rel="manifest" href="manifest.json">
+    <title>NarrativeX - AI Comic Creator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #1a1a2e;
+            --fg: #ffffff;
+            --accent: #00d4ff;
+            --secondary: #ff006e;
+            --tertiary: #8338ec;
+            --success: #3a86ff;
+            --warning: #fb5607;
+            --card-bg: #16213e;
+        }
+
+        body.dark-theme {
+            --bg: #1a1a2e;
+            --fg: #ffffff;
+            --accent: #00d4ff;
+            --card-bg: #16213e;
+        }
+
+        body.neon-theme {
+            --bg: #0a0a0a;
+            --fg: #00ff00;
+            --accent: #ff00ff;
+            --card-bg: #1a1a1a;
+        }
+
+        body.cosmic-theme {
+            --bg: #0d0221;
+            --fg: #ffd60a;
+            --accent: #fca311;
+            --card-bg: #370617;
+        }
+
+        body.manga-bw-theme {
+            --bg: #ffffff;
+            --fg: #000000;
+            --accent: #000000;
+            --card-bg: #f0f0f0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--fg);
+        }
+
+        #app {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            padding: 1.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: var(--fg);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        .container {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .footer {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-top: 2px solid var(--accent);
+            overflow-x: auto;
+        }
+
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            border: none;
+            color: var(--bg);
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 2px solid var(--accent);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            border: none;
+            color: var(--bg);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .btn.secondary {
+            background: var(--secondary);
+        }
+
+        .btn.tertiary {
+            background: var(--tertiary);
+        }
+
+        .input-group {
+            margin: 1rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            padding: 0.75rem;
+            background: var(--card-bg);
+            border: 2px solid var(--accent);
+            color: var(--fg);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            box-shadow: 0 0 15px var(--accent);
+            border-color: var(--secondary);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .grid-item {
+            background: var(--card-bg);
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .grid-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .grid-item.selected {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 0.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .comic-panel {
+            background: white;
+            border: 3px solid black;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .comic-text {
+            color: black;
+            font-weight: bold;
+            text-align: center;
+            padding: 0.5rem;
+            border: 2px solid black;
+            border-radius: 50%;
+            background: white;
+            max-width: 150px;
+            margin: 0 auto;
+        }
+
+        .toggle-switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toggle-switch input {
+            width: 50px;
+            height: 25px;
+            appearance: none;
+            background: #ccc;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .toggle-switch input:checked {
+            background: var(--accent);
+        }
+
+        .toggle-switch input::before {
+            content: '';
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            transition: left 0.3s;
+        }
+
+        .toggle-switch input:checked::before {
+            left: 27px;
+        }
+
+        .animation-book {
+            perspective: 1000px;
+            width: 200px;
+            height: 150px;
+            margin: 2rem auto;
+        }
+
+        .book {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: openBook 3s ease-in-out infinite;
+        }
+
+        @keyframes openBook {
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(45deg); }
+            100% { transform: rotateY(0deg); }
+        }
+
+        .book-page {
+            position: absolute;
+            width: 100px;
+            height: 150px;
+            background: linear-gradient(90deg, #fff, #f0f0f0);
+            border: 2px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .book-front {
+            right: 0;
+            transform: rotateY(0deg);
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            color: var(--fg);
+            box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .book-back {
+            left: 0;
+            transform: rotateY(180deg);
+        }
+
+        .spinner {
+            border: 4px solid var(--card-bg);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 1rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg);
+            border: 2px solid var(--accent);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            text-align: center;
+        }
+
+        .close-modal {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .chat-log {
+            background: var(--card-bg);
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            padding: 1rem;
+            height: 300px;
+            overflow-y: auto;
+            margin: 1rem 0;
+        }
+
+        .message {
+            margin: 0.75rem 0;
+            padding: 0.75rem;
+            border-radius: 8px;
+            animation: slideIn 0.3s ease-in;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .message.user {
+            background: var(--accent);
+            color: var(--bg);
+            text-align: right;
+        }
+
+        .message.ai {
+            background: var(--secondary);
+            color: var(--fg);
+        }
+
+        .camera-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 1rem auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        canvas {
+            display: none;
+        }
+
+        .recording-indicator {
+            background: var(--warning);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            animation: pulse 1s ease-in-out infinite;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-card p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px var(--accent); }
+            50% { box-shadow: 0 0 40px var(--accent); }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <div id="app">
+        <!-- HOME SCREEN -->
+        <div id="homeScreen" class="screen active">
+            <div class="header">
+                <h1>✦ NarrativeX ✦</h1>
+                <button class="header-btn" onclick="showSettings()">⚙️</button>
+            </div>
+            <div class="container">
+                <div class="animation-book floating">
+                    <div class="book">
+                        <div class="book-page book-front">📖</div>
+                        <div class="book-page book-back">📖</div>
+                    </div>
+                </div>
+                <h2 style="text-align: center; margin: 2rem 0; font-size: 1.5rem;">Welcome to NarrativeX</h2>
+                <p style="text-align: center; opacity: 0.8; margin-bottom: 2rem;">Create AI-powered comics and stories with stunning visuals</p>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div class="card" onclick="goToScreen('creatorScreen')">
+                        <h3>🎨 Comic Creator</h3>
+                        <p>Start creating your own comics with AI assistance</p>
+                    </div>
+                    <div class="card" onclick="goToScreen('aiStudioScreen')">
+                        <h3>🤖 AI Studio</h3>
+                        <p>Chat with AI to generate content</p>
+                    </div>
+                    <div class="card" onclick="goToScreen('galleryScreen')">
+                        <h3>📚 My Comics</h3>
+                        <p>View and manage your saved comics</p>
+                    </div>
+                    <div class="card" onclick="goToScreen('toolsScreen')">
+                        <h3>🔧 Tools</h3>
+                        <p>Face scan, voice recording, and more</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CREATOR SCREEN -->
+        <div id="creatorScreen" class="screen">
+            <div class="header">
+                <h1>🎨 Comic Creator</h1>
+                <button class="header-btn" onclick="goBack()">←</button>
+            </div>
+            <div class="container">
+                <div class="input-group">
+                    <label>Select Genre</label>
+                    <div class="grid">
+                        <div class="grid-item" onclick="selectGenre('Action')">⚡ Action</div>
+                        <div class="grid-item" onclick="selectGenre('Romance')">💕 Romance</div>
+                        <div class="grid-item" onclick="selectGenre('Horror')">👻 Horror</div>
+                        <div class="grid-item" onclick="selectGenre('Comedy')">😂 Comedy</div>
+                        <div class="grid-item" onclick="selectGenre('Sci-Fi')">🚀 Sci-Fi</div>
+                        <div class="grid-item" onclick="selectGenre('Fantasy')">🐉 Fantasy</div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Choose Main Character</label>
+                    <div class="grid">
+                        <div class="grid-item" onclick="selectCharacter('Superman')"><div class="avatar">🦸</div>Superman</div>
+                        <div class="grid-item" onclick="selectCharacter('Wonder Woman')"><div class="avatar">👩‍🦸</div>Wonder Woman</div>
+                        <div class="grid-item" onclick="selectCharacter('Batman')"><div class="avatar">🦇</div>Batman</div>
+                        <div class="grid-item" onclick="selectCharacter('Spider-Man')"><div class="avatar">🕷️</div>Spider-Man</div>
+                        <div class="grid-item" onclick="selectCharacter('Iron Man')"><div class="avatar">🤖</div>Iron Man</div>
+                        <div class="grid-item" onclick="selectCharacter('Captain America')"><div class="avatar">🛡️</div>Cap America</div>
+                        <div class="grid-item" onclick="selectCharacter('Naruto')"><div class="avatar">🤜</div>Naruto</div>
+                        <div class="grid-item" onclick="selectCharacter('Luffy')"><div class="avatar">🏴‍☠️</div>Luffy</div>
+                        <div class="grid-item" onclick="selectCharacter('Goku')"><div class="avatar">⚡</div>Goku</div>
+                        <div class="grid-item" onclick="selectCharacter('Ichigo')"><div class="avatar">⚔️</div>Ichigo</div>
+                        <div class="grid-item" onclick="selectCharacter('Tanjiro')"><div class="avatar">🔥</div>Tanjiro</div>
+                        <div class="grid-item" onclick="selectCharacter('Eren')"><div class="avatar">🧐</div>Eren</div>
+                        <div class="grid-item" onclick="selectCharacter('Deku')"><div class="avatar">💙</div>Deku</div>
+                        <div class="grid-item" onclick="selectCharacter('Bakugo')"><div class="avatar">💥</div>Bakugo</div>
+                        <div class="grid-item" onclick="selectCharacter('All Might')"><div class="avatar">💪</div>All Might</div>
+                        <div class="grid-item" onclick="selectCharacter('Saitama')"><div class="avatar">👨</div>Saitama</div>
+                        <div class="grid-item" onclick="selectCharacter('Lelouch')"><div class="avatar">👁️</div>Lelouch</div>
+                        <div class="grid-item" onclick="selectCharacter('Light Yagami')"><div class="avatar">📓</div>Light</div>
+                        <div class="grid-item" onclick="selectCharacter('Vegeta')"><div class="avatar">👹</div>Vegeta</div>
+                        <div class="grid-item" onclick="selectCharacter('Create Own')"><div class="avatar">✨</div>Create Own</div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Story Mode</label>
+                    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));">
+                        <div class="grid-item" onclick="selectMode('Quick')">⚡ Quick</div>
+                        <div class="grid-item" onclick="selectMode('Guided')">📖 Guided</div>
+                        <div class="grid-item" onclick="selectMode('NeverEnding')">♾️ Never-Ending</div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="startCreating()">Start Creating ✨</button>
+            </div>
+        </div>
+
+        <!-- AI STUDIO SCREEN -->
+        <div id="aiStudioScreen" class="screen">
+            <div class="header">
+                <h1>🤖 AI Studio</h1>
+                <button class="header-btn" onclick="goBack()">←</button>
+            </div>
+            <div class="container">
+                <div class="input-group">
+                    <label>AI Generation Level</label>
+                    <div class="grid" style="grid-template-columns: repeat(2, 1fr);">
+                        <div class="grid-item" onclick="selectAILevel('Sentence')">📝 Next Sentence</div>
+                        <div class="grid-item" onclick="selectAILevel('Paragraph')">📄 Paragraph</div>
+                        <div class="grid-item" onclick="selectAILevel('Chapter')">📚 Chapter</div>
+                        <div class="grid-item" onclick="selectAILevel('Full')">🌟 Full Comic</div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Your Current Story</label>
+                    <textarea id="storyInput" placeholder="Paste your current story here..." style="height: 150px;"></textarea>
+                </div>
+
+                <button class="btn" onclick="generateAI()">Generate with AI 🚀</button>
+
+                <h3 style="margin-top: 2rem;">Chat with AI</h3>
+                <div class="chat-log" id="chatLog"></div>
+
+                <div class="input-group">
+                    <input id="aiMessage" type="text" placeholder="Type your message...">
+                </div>
+                <button class="btn" onclick="sendAIMessage()">Send 💬</button>
+            </div>
+        </div>
+
+        <!-- GALLERY SCREEN -->
+        <div id="galleryScreen" class="screen">
+            <div class="header">
+                <h1>📚 My Comics</h1>
+                <button class="header-btn" onclick="goBack()">←</button>
+            </div>
+            <div class="container">
+                <div id="comicsList"></div>
+            </div>
+        </div>
+
+        <!-- TOOLS SCREEN -->
+        <div id="toolsScreen" class="screen">
+            <div class="header">
+                <h1>🔧 Tools</h1>
+                <button class="header-btn" onclick="goBack()">←</button>
+            </div>
+            <div class="container">
+                <div class="card" onclick="goToScreen('faceScanScreen')">
+                    <h3>📷 Face Scan</h3>
+                    <p>Capture your face and apply comic styles</p>
+                </div>
+                <div class="card" onclick="goToScreen('voiceScreen')">
+                    <h3>🎙️ Voice Recording</h3>
+                    <p>Record narration for your comics</p>
+                </div>
+                <div class="card" onclick="exportComics()">
+                    <h3>💾 Export Comics</h3>
+                    <p>Download your comics as images</p>
+                </div>
+                <div class="stats">
+                    <div class="stat-card">
+                        <h3 id="comicCount">0</h3>
+                        <p>Comics Created</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="storageSize">0MB</h3>
+                        <p>Storage Used</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FACE SCAN SCREEN -->
+        <div id="faceScanScreen" class="screen">
+            <div class="header">
+                <h1>📷 Face Scan</h1>
+                <button class="header-btn" onclick="goBack()">←</button>
+            </div>
+            <div class="container">
+                <div class="camera-container">
+                    <video id="cameraFeed" playsinline autoplay></video>
+                </div>
+                <button class="btn" onclick="captureFace()">Capture Face 📸</button>
+                <canvas id="faceCanvas"></canvas>
+                <div id="facePreview"></div>
+            </div>
+        </div>
+
+        <!-- VOICE SCREEN -->
+        <div id="voiceScreen" class="screen">
+            <div class="header">
+                <h1>🎙️ Voice Recording</h1>
+                <button class="header-btn" onclick="goBack()">←</button>
+            </div>
+            <div class="container">
+                <div id="recordingStatus"></div>
+                <button class="btn" onclick="startRecording()">Start Recording 🔴</button>
+                <button class="btn secondary" onclick="stopRecording()">Stop Recording ⏹️</button>
+                <button class="btn tertiary" onclick="playRecording()">Play Recording ▶️</button>
+                <audio id="audioPlayback" style="width: 100%; margin: 1rem 0;"></audio>
+            </div>
+        </div>
+
+        <!-- SETTINGS SCREEN -->
+        <div id="settingsScreen" class="screen">
+            <div class="header">
+                <h1>⚙️ Settings</h1>
+                <button class="header-btn" onclick="goBack()">←</button>
+            </div>
+            <div class="container">
+                <h3>🎨 Theme</h3>
+                <div class="grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="grid-item" onclick="setTheme('dark-theme')">🌙 Dark</div>
+                    <div class="grid-item" onclick="setTheme('neon-theme')">⚡ Neon</div>
+                    <div class="grid-item" onclick="setTheme('cosmic-theme')">🌌 Cosmic</div>
+                    <div class="grid-item" onclick="setTheme('manga-bw-theme')">⬛ Manga B&W</div>
+                </div>
+
+                <h3 style="margin-top: 2rem;">⚙️ Options</h3>
+                <div style="margin: 1rem 0;">
+                    <label class="toggle-switch">
+                        <span>Sound Effects</span>
+                        <input type="checkbox" checked id="soundToggle" onchange="saveSetting('sound', this.checked)">
+                    </label>
+                </div>
+                <div style="margin: 1rem 0;">
+                    <label class="toggle-switch">
+                        <span>Auto-save</span>
+                        <input type="checkbox" checked id="autoSaveToggle" onchange="saveSetting('autoSave', this.checked)">
+                    </label>
+                </div>
+                <div style="margin: 1rem 0;">
+                    <label class="toggle-switch">
+                        <span>Notifications</span>
+                        <input type="checkbox" checked id="notifToggle" onchange="saveSetting('notifications', this.checked)">
+                    </label>
+                </div>
+
+                <h3 style="margin-top: 2rem;">📊 About</h3>
+                <p>NarrativeX v1.0</p>
+                <p>AI-powered comic and story creator</p>
+                <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 1rem;">Made with ❤️ for storytellers</p>
+
+                <button class="btn secondary" onclick="clearAllData()" style="margin-top: 2rem; width: 100%;">Clear All Data 🗑️</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <div id="generatingModal" class="modal">
+        <div class="modal-content">
+            <h2>✨ Generating...</h2>
+            <div class="spinner"></div>
+            <p>Creating your story with AI magic...</p>
+        </div>
+    </div>
+
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <h2>🎉 Success!</h2>
+            <p id="successMessage">Your comic has been created!</p>
+            <button class="btn" onclick="closeModal('successModal')">Great! 👍</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
