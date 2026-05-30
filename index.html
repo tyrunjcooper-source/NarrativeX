@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="NarrativeX">
-    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%231a1a2e' width='192' height='192'/><text x='50%' y='50%' font-size='120' fill='%2300d4ff' text-anchor='middle' dominant-baseline='middle' font-family='Arial' font-weight='bold'>X</text></svg>">
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%231a1a2e' width='192' height='192'/><text x='50%' y='50%' font-size='120' fill='%2300d4ff' text-anchor='middle' dominant-baseline='middle'>✦</text></svg>">
     <link rel="manifest" href="manifest.json">
     <title>NarrativeX - AI Comic Creator</title>
     <style>
@@ -232,7 +232,7 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
             gap: 1rem;
             margin: 1rem 0;
         }
@@ -255,6 +255,74 @@
         .grid-item.selected {
             background: var(--accent);
             color: var(--bg);
+        }
+
+        .character-tabs {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            padding: 0.5rem 0;
+        }
+
+        .char-tab {
+            padding: 0.5rem 1rem;
+            background: var(--card-bg);
+            border: 2px solid var(--accent);
+            color: var(--fg);
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .char-tab:hover, .char-tab.active {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .character-card {
+            background: var(--card-bg);
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            padding: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .character-card:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .character-card.selected {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--secondary);
+        }
+
+        .char-emoji {
+            font-size: 2rem;
+            margin: 0.25rem 0;
+        }
+
+        .char-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0.25rem 0;
+        }
+
+        .char-series {
+            font-size: 0.65rem;
+            opacity: 0.7;
         }
 
         .avatar {
@@ -560,11 +628,11 @@
                     </div>
                 </div>
                 <h2 style="text-align: center; margin: 2rem 0; font-size: 1.5rem;">Welcome to NarrativeX</h2>
-                <p style="text-align: center; opacity: 0.8; margin-bottom: 2rem;">Create AI-powered comics and stories with stunning visuals</p>
+                <p style="text-align: center; opacity: 0.8; margin-bottom: 2rem;">Create AI-powered comics and stories with your favorite characters</p>
                 <div style="display: flex; flex-direction: column; gap: 1rem;">
                     <div class="card" onclick="goToScreen('creatorScreen')">
                         <h3>🎨 Comic Creator</h3>
-                        <p>Start creating your own comics with AI assistance</p>
+                        <p>Start creating with DC, Marvel, Anime & Manga characters</p>
                     </div>
                     <div class="card" onclick="goToScreen('aiStudioScreen')">
                         <h3>🤖 AI Studio</h3>
@@ -602,29 +670,13 @@
                 </div>
 
                 <div class="input-group">
-                    <label>Choose Main Character</label>
-                    <div class="grid">
-                        <div class="grid-item" onclick="selectCharacter('Superman')"><div class="avatar">🦸</div>Superman</div>
-                        <div class="grid-item" onclick="selectCharacter('Wonder Woman')"><div class="avatar">👩‍🦸</div>Wonder Woman</div>
-                        <div class="grid-item" onclick="selectCharacter('Batman')"><div class="avatar">🦇</div>Batman</div>
-                        <div class="grid-item" onclick="selectCharacter('Spider-Man')"><div class="avatar">🕷️</div>Spider-Man</div>
-                        <div class="grid-item" onclick="selectCharacter('Iron Man')"><div class="avatar">🤖</div>Iron Man</div>
-                        <div class="grid-item" onclick="selectCharacter('Captain America')"><div class="avatar">🛡️</div>Cap America</div>
-                        <div class="grid-item" onclick="selectCharacter('Naruto')"><div class="avatar">🤜</div>Naruto</div>
-                        <div class="grid-item" onclick="selectCharacter('Luffy')"><div class="avatar">🏴‍☠️</div>Luffy</div>
-                        <div class="grid-item" onclick="selectCharacter('Goku')"><div class="avatar">⚡</div>Goku</div>
-                        <div class="grid-item" onclick="selectCharacter('Ichigo')"><div class="avatar">⚔️</div>Ichigo</div>
-                        <div class="grid-item" onclick="selectCharacter('Tanjiro')"><div class="avatar">🔥</div>Tanjiro</div>
-                        <div class="grid-item" onclick="selectCharacter('Eren')"><div class="avatar">🧐</div>Eren</div>
-                        <div class="grid-item" onclick="selectCharacter('Deku')"><div class="avatar">💙</div>Deku</div>
-                        <div class="grid-item" onclick="selectCharacter('Bakugo')"><div class="avatar">💥</div>Bakugo</div>
-                        <div class="grid-item" onclick="selectCharacter('All Might')"><div class="avatar">💪</div>All Might</div>
-                        <div class="grid-item" onclick="selectCharacter('Saitama')"><div class="avatar">👨</div>Saitama</div>
-                        <div class="grid-item" onclick="selectCharacter('Lelouch')"><div class="avatar">👁️</div>Lelouch</div>
-                        <div class="grid-item" onclick="selectCharacter('Light Yagami')"><div class="avatar">📓</div>Light</div>
-                        <div class="grid-item" onclick="selectCharacter('Vegeta')"><div class="avatar">👹</div>Vegeta</div>
-                        <div class="grid-item" onclick="selectCharacter('Create Own')"><div class="avatar">✨</div>Create Own</div>
-                    </div>
+                    <label>Choose Your Character Universe</label>
+                    <div class="character-tabs" id="charTabs"></div>
+                </div>
+
+                <div class="input-group">
+                    <label id="charLabel">Select Character</label>
+                    <div class="character-grid" id="characterGrid"></div>
                 </div>
 
                 <div class="input-group">
@@ -785,7 +837,7 @@
 
                 <h3 style="margin-top: 2rem;">📊 About</h3>
                 <p>NarrativeX v1.0</p>
-                <p>AI-powered comic and story creator</p>
+                <p>AI-powered comic and story creator with DC, Marvel, Anime & Manga characters</p>
                 <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 1rem;">Made with ❤️ for storytellers</p>
 
                 <button class="btn secondary" onclick="clearAllData()" style="margin-top: 2rem; width: 100%;">Clear All Data 🗑️</button>
@@ -810,6 +862,7 @@
         </div>
     </div>
 
+    <script src="characters.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
