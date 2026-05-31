@@ -1,43 +1,117 @@
 // NarrativeX Characters Data
 const characters = {
     'DC Universe': [
-        { name: 'Superman', emoji: '🦸‍♂️', series: 'DC' },
-        { name: 'Batman', emoji: '🦇', series: 'DC' },
-        { name: 'Wonder Woman', emoji: '👩‍🦸', series: 'DC' },
-        { name: 'The Flash', emoji: '⚡', series: 'DC' },
-        { name: 'Green Lantern', emoji: '💚', series: 'DC' },
-        { name: 'Aquaman', emoji: '🌊', series: 'DC' }
+        // Main Heroes
+        { name: 'Superman', emoji: '🦸‍♂️', series: 'DC', role: 'Hero' },
+        { name: 'Batman', emoji: '🦇', series: 'DC', role: 'Hero' },
+        { name: 'Wonder Woman', emoji: '👩‍🦸', series: 'DC', role: 'Hero' },
+        { name: 'The Flash', emoji: '⚡', series: 'DC', role: 'Hero' },
+        { name: 'Green Lantern', emoji: '💚', series: 'DC', role: 'Hero' },
+        { name: 'Aquaman', emoji: '🌊', series: 'DC', role: 'Hero' },
+        { name: 'Cyborg', emoji: '🤖', series: 'DC', role: 'Hero' },
+        { name: 'Green Arrow', emoji: '🏹', series: 'DC', role: 'Hero' },
+        // Sidekicks & Supporting
+        { name: 'Robin', emoji: '🦅', series: 'DC', role: 'Sidekick' },
+        { name: 'Nightwing', emoji: '🌙', series: 'DC', role: 'Sidekick' },
+        { name: 'Batgirl', emoji: '💜', series: 'DC', role: 'Sidekick' },
+        { name: 'Kid Flash', emoji: '💨', series: 'DC', role: 'Sidekick' },
+        { name: 'Speedy', emoji: '🔴', series: 'DC', role: 'Sidekick' },
     ],
     'Marvel': [
-        { name: 'Spider-Man', emoji: '🕷️', series: 'Marvel' },
-        { name: 'Iron Man', emoji: '🤖', series: 'Marvel' },
-        { name: 'Captain America', emoji: '🛡️', series: 'Marvel' },
-        { name: 'Thor', emoji: '⚒️', series: 'Marvel' },
-        { name: 'Black Widow', emoji: '🔫', series: 'Marvel' },
-        { name: 'Hulk', emoji: '💪', series: 'Marvel' }
+        // Main Heroes
+        { name: 'Spider-Man', emoji: '🕷️', series: 'Marvel', role: 'Hero' },
+        { name: 'Iron Man', emoji: '🤖', series: 'Marvel', role: 'Hero' },
+        { name: 'Captain America', emoji: '🛡️', series: 'Marvel', role: 'Hero' },
+        { name: 'Thor', emoji: '⚒️', series: 'Marvel', role: 'Hero' },
+        { name: 'Black Widow', emoji: '🔫', series: 'Marvel', role: 'Hero' },
+        { name: 'Hulk', emoji: '💪', series: 'Marvel', role: 'Hero' },
+        { name: 'Doctor Strange', emoji: '🔮', series: 'Marvel', role: 'Hero' },
+        { name: 'Black Panther', emoji: '🐾', series: 'Marvel', role: 'Hero' },
+        // Sidekicks & Supporting
+        { name: 'Falcon', emoji: '🦅', series: 'Marvel', role: 'Sidekick' },
+        { name: 'Winter Soldier', emoji: '❄️', series: 'Marvel', role: 'Sidekick' },
+        { name: 'Scarlet Witch', emoji: '🌪️', series: 'Marvel', role: 'Sidekick' },
+        { name: 'Hawkeye', emoji: '🎯', series: 'Marvel', role: 'Sidekick' },
+        { name: 'Vision', emoji: '💎', series: 'Marvel', role: 'Sidekick' },
+        { name: 'War Machine', emoji: '🔫', series: 'Marvel', role: 'Sidekick' },
     ],
     'Anime': [
-        { name: 'Naruto', emoji: '🍃', series: 'Anime' },
-        { name: 'Luffy', emoji: '🏴‍☠️', series: 'Anime' },
-        { name: 'Goku', emoji: '🌀', series: 'Anime' },
-        { name: 'Ichigo', emoji: '⚔️', series: 'Anime' },
-        { name: 'Tanjiro', emoji: '🔥', series: 'Anime' },
-        { name: 'Eren', emoji: '🧱', series: 'Anime' },
-        { name: 'Deku', emoji: '👊', series: 'Anime' },
-        { name: 'Bakugo', emoji: '💥', series: 'Anime' },
-        { name: 'All Might', emoji: '🦸', series: 'Anime' },
-        { name: 'Saitama', emoji: '😐', series: 'Anime' },
-        { name: 'Lelouch', emoji: '♛', series: 'Anime' },
-        { name: 'Light Yagami', emoji: '📓', series: 'Anime' },
-        { name: 'Vegeta', emoji: '👑', series: 'Anime' }
+        // Main Heroes
+        { name: 'Naruto', emoji: '🍃', series: 'Anime', role: 'Hero' },
+        { name: 'Luffy', emoji: '🏴‍☠️', series: 'Anime', role: 'Hero' },
+        { name: 'Goku', emoji: '🌀', series: 'Anime', role: 'Hero' },
+        { name: 'Ichigo', emoji: '⚔️', series: 'Anime', role: 'Hero' },
+        { name: 'Tanjiro', emoji: '🔥', series: 'Anime', role: 'Hero' },
+        { name: 'Eren', emoji: '🧱', series: 'Anime', role: 'Hero' },
+        { name: 'Deku', emoji: '👊', series: 'Anime', role: 'Hero' },
+        { name: 'Bakugo', emoji: '💥', series: 'Anime', role: 'Hero' },
+        { name: 'All Might', emoji: '🦸', series: 'Anime', role: 'Hero' },
+        { name: 'Saitama', emoji: '😐', series: 'Anime', role: 'Hero' },
+        { name: 'Lelouch', emoji: '♛', series: 'Anime', role: 'Hero' },
+        { name: 'Light Yagami', emoji: '📓', series: 'Anime', role: 'Hero' },
+        { name: 'Vegeta', emoji: '👑', series: 'Anime', role: 'Hero' },
+        { name: 'Jotaro', emoji: '🕶️', series: 'Anime', role: 'Hero' },
+        // Sidekicks & Supporting
+        { name: 'Sasuke', emoji: '⚡', series: 'Anime', role: 'Sidekick' },
+        { name: 'Sakura', emoji: '🌸', series: 'Anime', role: 'Sidekick' },
+        { name: 'Kakashi', emoji: '👁️', series: 'Anime', role: 'Sidekick' },
+        { name: 'Zoro', emoji: '🗡️', series: 'Anime', role: 'Sidekick' },
+        { name: 'Nami', emoji: '🗺️', series: 'Anime', role: 'Sidekick' },
+        { name: 'Chopper', emoji: '🦌', series: 'Anime', role: 'Sidekick' },
+        { name: 'Vegeta Jr', emoji: '💙', series: 'Anime', role: 'Sidekick' },
+        { name: 'Gohan', emoji: '⭐', series: 'Anime', role: 'Sidekick' },
+        { name: 'Kenshin', emoji: '⛩️', series: 'Anime', role: 'Sidekick' },
+        { name: 'Aizawa', emoji: '😴', series: 'Anime', role: 'Sidekick' },
+        { name: 'Nezuko', emoji: '💚', series: 'Anime', role: 'Sidekick' },
+        { name: 'Giyu', emoji: '💧', series: 'Anime', role: 'Sidekick' },
+        { name: 'Mikasa', emoji: '🗡️', series: 'Anime', role: 'Sidekick' },
+        { name: 'Armin', emoji: '📚', series: 'Anime', role: 'Sidekick' },
     ],
     'Manga': [
-        { name: 'Tanjiro', emoji: '🔥', series: 'Manga' },
-        { name: 'Luffy', emoji: '🏴‍☠️', series: 'Manga' },
-        { name: 'Naruto', emoji: '🍃', series: 'Manga' },
-        { name: 'Goku', emoji: '🌀', series: 'Manga' },
-        { name: 'Ichigo', emoji: '⚔️', series: 'Manga' },
-        { name: 'Deku', emoji: '👊', series: 'Manga' }
+        // Main Heroes
+        { name: 'Tanjiro', emoji: '🔥', series: 'Manga', role: 'Hero' },
+        { name: 'Luffy', emoji: '🏴‍☠️', series: 'Manga', role: 'Hero' },
+        { name: 'Naruto', emoji: '🍃', series: 'Manga', role: 'Hero' },
+        { name: 'Goku', emoji: '🌀', series: 'Manga', role: 'Hero' },
+        { name: 'Ichigo', emoji: '⚔️', series: 'Manga', role: 'Hero' },
+        { name: 'Deku', emoji: '👊', series: 'Manga', role: 'Hero' },
+        { name: 'Kenshin', emoji: '⛩️', series: 'Manga', role: 'Hero' },
+        { name: 'Yuji', emoji: '🔴', series: 'Manga', role: 'Hero' },
+        // Sidekicks & Supporting
+        { name: 'Nezuko', emoji: '💚', series: 'Manga', role: 'Sidekick' },
+        { name: 'Zoro', emoji: '🗡️', series: 'Manga', role: 'Sidekick' },
+        { name: 'Sasuke', emoji: '⚡', series: 'Manga', role: 'Sidekick' },
+        { name: 'Vegeta', emoji: '👑', series: 'Manga', role: 'Sidekick' },
+        { name: 'Rukia', emoji: '👻', series: 'Manga', role: 'Sidekick' },
+        { name: 'Ochako', emoji: '✨', series: 'Manga', role: 'Sidekick' },
+        { name: 'Kaoru', emoji: '💜', series: 'Manga', role: 'Sidekick' },
+        { name: 'Megumi', emoji: '🖤', series: 'Manga', role: 'Sidekick' },
+    ],
+    'New Heroes': [
+        // 10 New Main Heroes
+        { name: 'Daredevil', emoji: '👁️', series: 'Marvel', role: 'Hero' },
+        { name: 'Deadpool', emoji: '🔴', series: 'Marvel', role: 'Hero' },
+        { name: 'Wolverine', emoji: '🐺', series: 'Marvel', role: 'Hero' },
+        { name: 'Cyclops', emoji: '🔴', series: 'Marvel', role: 'Hero' },
+        { name: 'Storm', emoji: '⛈️', series: 'Marvel', role: 'Hero' },
+        { name: 'Jean Grey', emoji: '🔥', series: 'Marvel', role: 'Hero' },
+        { name: 'Ant-Man', emoji: '🐜', series: 'Marvel', role: 'Hero' },
+        { name: 'Wasp', emoji: '🐝', series: 'Marvel', role: 'Hero' },
+        { name: 'Shang-Chi', emoji: '🥋', series: 'Marvel', role: 'Hero' },
+        { name: 'Moon Knight', emoji: '🌙', series: 'Marvel', role: 'Hero' },
+    ],
+    'DC Extended': [
+        // 10 More DC Heroes & Villains
+        { name: 'Superman', emoji: '🦸‍♂️', series: 'DC', role: 'Hero' },
+        { name: 'Shazam', emoji: '⚡', series: 'DC', role: 'Hero' },
+        { name: 'Atom', emoji: '⚛️', series: 'DC', role: 'Hero' },
+        { name: 'Firestorm', emoji: '🔥', series: 'DC', role: 'Hero' },
+        { name: 'Zatanna', emoji: '🎭', series: 'DC', role: 'Hero' },
+        { name: 'Constantine', emoji: '🔮', series: 'DC', role: 'Hero' },
+        { name: 'Hawkgirl', emoji: '🪶', series: 'DC', role: 'Hero' },
+        { name: 'Mera', emoji: '🌊', series: 'DC', role: 'Hero' },
+        { name: 'Vixen', emoji: '🦁', series: 'DC', role: 'Hero' },
+        { name: 'Booster Gold', emoji: '⭐', series: 'DC', role: 'Hero' },
     ]
 };
 
@@ -60,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
             tab.classList.add('active');
             selectedUniverse = universe;
             populateCharacterGrid();
-            playSound();
         };
         charTabs.appendChild(tab);
     });
@@ -77,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.innerHTML = `
                 <div class="char-emoji">${char.emoji}</div>
                 <div class="char-name">${char.name}</div>
-                <div class="char-series">${char.series}</div>
+                <div class="char-series">${char.role}</div>
             `;
             characterGrid.appendChild(card);
         });
